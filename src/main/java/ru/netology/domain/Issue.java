@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
 import java.util.*;
-import java.util.function.Predicate;
 
 @Data
 @NoArgsConstructor
@@ -15,7 +13,7 @@ import java.util.function.Predicate;
 public class Issue implements Comparable <Issue> {
     private int id;
     private boolean isOpen;
-    private String Author;
+    private String author;
     private int openedDaysAgo;
     private Set<String> issueLabels = new HashSet<>();
     private Set<String> issueAssignee = new HashSet<>();

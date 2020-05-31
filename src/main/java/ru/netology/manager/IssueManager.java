@@ -4,9 +4,8 @@ package ru.netology.manager;
 import ru.netology.domain.Issue;
 import ru.netology.repository.IssueRepository;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
+import java.util.*;
+import java.util.function.Predicate;
 
 public class IssueManager {
     private IssueRepository repository;
@@ -19,27 +18,57 @@ public class IssueManager {
         repository.save(item);
     }
 
-    public Collection<Issue> getAll() {
+    public List<Issue> getAll() {
         return repository.findAll();
     }
 
-    public boolean addAll(Collection<Issue> items) {
+    public boolean addAll(List<Issue> items) {
         return repository.addAll(items);
     }
 
-    public Collection<Issue> sortByNewest() {
+    public List<Issue> sortByNewest() {
         Comparator byNewest = Comparator.naturalOrder();
-        Collection<Issue> issues = new ArrayList<>();
+        List<Issue> issues = new ArrayList<>();
         issues.addAll(repository.findAll());
         ((ArrayList<Issue>) issues).sort(byNewest);
         return issues;
     }
 
-    public Collection<Issue> sortByOldest() {
+    public List<Issue> sortByOldest() {
         Comparator byNewest = Comparator.reverseOrder();
-        Collection<Issue> issues = new ArrayList<>();
+        List<Issue> issues = new ArrayList<>();
         issues.addAll(repository.findAll());
         ((ArrayList<Issue>) issues).sort(byNewest);
+        return issues;
+    }
+
+    public List<Issue> findByAuthor(String author) {
+        Predicate<String> byAuthor = t -> t.equals(author);
+        List<Issue> issues = new ArrayList<>();
+        for (Issue item : repository.findAll())
+            if (byAuthor.test(item.getAuthor())) {
+                issues.add(item);
+            }
+        return issues;
+    }
+
+    public List<Issue> findByLabel(Set<String> label) {
+        Predicate<Set<String>> byLabel = t -> t.containsAll(label);
+        List<Issue> issues = new ArrayList<>();
+        for (Issue item : repository.findAll())
+            if (byLabel.test(item.getIssueLabels())) {
+                issues.add(item);
+            }
+        return issues;
+    }
+
+    public List<Issue> findByAssignee(Set<String> assignee) {
+        Predicate<Set<String>> byLabel = t -> t.containsAll(assignee);
+        List<Issue> issues = new ArrayList<>();
+        for (Issue item : repository.findAll())
+            if (byLabel.test(item.getIssueAssignee())) {
+                issues.add(item);
+            }
         return issues;
     }
 }
